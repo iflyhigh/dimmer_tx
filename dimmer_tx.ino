@@ -48,9 +48,9 @@ tx_config_t tx_config;
 #define BRIGHTNESS_HIGH	0xAA	// value to be sent for high brigtness
 #define BRIGHTNESS_LOW	0x3C	// value to be sent for low brigtness
 
-uint8_t channel = 0;			// channel to transmit information, 5 bits are used (31 channels supported, channel 0 impossible)
+uint8_t channel = 0;			// channel to transmit information, 5 bits are used (31 channels supported, channel value 0 is used to detect EEPROM read failures)
 
-ManchesterRF rf(MAN_2400);		//link speed, try also MAN_300, MAN_600, MAN_1200, MAN_2400, MAN_4800, MAN_9600, MAN_19200, MAN_38400
+ManchesterRF rf(MAN_2400);		// link speed
 
 //CRC-8 - based on the CRC8 formulas by Dallas/Maxim
 //code released under the therms of the GNU GPL 3.0 license
@@ -194,7 +194,7 @@ void setup()
 
 void loop()
 {
-	uint16_t wait = 5000;
+	uint16_t wait = 10000;
 
 	digitalWrite(LED_PIN, LOW);
 	send_message(MSG_BRIGHTNESS, BRIGHTNESS_LOW);
