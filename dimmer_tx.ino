@@ -2,7 +2,7 @@
 #include "EEPROM.h"
 #include "EEPROMAnything.h"
 
-#define DEBUG
+//#define DEBUG
 
 // Configuration format
 // --------------------
@@ -155,7 +155,7 @@ void read_config()
 void send_message(uint8_t message_type, uint8_t message_value)
 {
 	uint8_t b1, b2, b3;				// ManchesterRF 3-byte transmitByte() bytes;
-	b1 = (DATA_START | message_type | (channel >> 4));
+	b1 = (DATA_START | (message_type << 1) | (channel >> 4));
 	b2 = ((channel << 4) | (message_value >> 4));
 	b3 = ((message_value << 4) | DATA_STOP);
 
@@ -175,6 +175,7 @@ void send_message(uint8_t message_type, uint8_t message_value)
 	rf.transmitByte(b1, b2, b3);
 	rf.transmitByte(b1, b2, b3);
 	rf.transmitByte(b1, b2, b3);
+	delay(250);
 }
 
 void setup()
@@ -194,7 +195,11 @@ void setup()
 
 void loop()
 {
-	uint16_t wait = 10000;
+	uint16_t wait = 5000;
+
+	//send_message(MSG_SET_LOW, 0);
+	//send_message(MSG_SET_HIGH, 100);
+	//send_message(MSG_SET_SPEED, 1);
 
 	digitalWrite(LED_PIN, LOW);
 	send_message(MSG_BRIGHTNESS, BRIGHTNESS_LOW);
@@ -203,4 +208,5 @@ void loop()
 	digitalWrite(LED_PIN, HIGH);
 	send_message(MSG_BRIGHTNESS, BRIGHTNESS_HIGH);
 	delay(wait);
+
 }
